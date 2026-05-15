@@ -3,7 +3,8 @@ import { buildPatterns, redactString, redactValue } from "../src/redact";
 
 describe("SDK redaction", () => {
   it("redacts emails, phone numbers, secrets, and cards", () => {
-    const input = "Email user@example.com, phone +1 415-555-2671, key sk_test_1234567890abcdef, card 4242 4242 4242 4242";
+    const input =
+      "Email user@example.com, phone +1 415-555-2671, key sk_test_1234567890abcdef, card 4242 4242 4242 4242";
 
     expect(redactString(input)).toContain("[REDACTED_EMAIL]");
     expect(redactString(input)).toContain("[REDACTED_PHONE]");

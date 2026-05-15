@@ -50,15 +50,17 @@ export default function QuickstartPage() {
         <div className="text-sm font-medium uppercase tracking-wide text-primary">Quickstart</div>
         <h1 className="text-3xl font-semibold tracking-normal">Capture your first LLM failure</h1>
         <p className="max-w-2xl text-muted-foreground">
-          PromptCrash stores local SQLite crashes and works without `XAI_API_KEY`. Optional AI features only enhance
-          classification and test generation.
+          PromptCrash stores local SQLite crashes and works without `XAI_API_KEY`. Optional AI
+          features only enhance classification and test generation.
         </p>
       </section>
 
       <Card id="send-your-first-crash">
         <CardHeader>
           <CardTitle>Send your first crash</CardTitle>
-          <CardDescription>Use the API directly to verify the dashboard before integrating the SDK.</CardDescription>
+          <CardDescription>
+            Use the API directly to verify the dashboard before integrating the SDK.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <CodeBlock value={curlSample} />
@@ -68,7 +70,9 @@ export default function QuickstartPage() {
       <Card id="sdk-quickstart">
         <CardHeader>
           <CardTitle>SDK quickstart</CardTitle>
-          <CardDescription>The SDK redacts sensitive values before sending the event.</CardDescription>
+          <CardDescription>
+            The SDK redacts sensitive values before sending the event.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <CodeBlock value={sdkSample} />

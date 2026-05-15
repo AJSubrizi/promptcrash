@@ -33,7 +33,8 @@ export function CrashList({
           <div className="rounded-md border border-dashed p-8 text-center">
             <div className="text-base font-medium">No crashes yet</div>
             <p className="mx-auto mt-2 max-w-xl text-sm text-muted-foreground">
-              Seed a polished local dataset, send a crash directly to the API, or wire the TypeScript SDK into an app.
+              Seed a polished local dataset, send a crash directly to the API, or wire the
+              TypeScript SDK into an app.
             </p>
             <div className="mt-5 flex flex-wrap justify-center gap-2">
               <form action={seedDemoAction}>
@@ -50,12 +51,17 @@ export function CrashList({
         ) : (
           <div className="divide-y">
             {crashes.map((crash) => (
-              <Link key={crash.id} href={`/crashes/${crash.id}`} className="block py-4 hover:bg-muted/50">
+              <Link
+                key={crash.id}
+                href={`/crashes/${crash.id}`}
+                className="block py-4 hover:bg-muted/50"
+              >
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
                     <div className="font-medium">{crash.route}</div>
                     <div className="mt-1 text-sm text-muted-foreground">
-                      {crash.projectName} · {crash.model} · {new Date(crash.createdAt).toLocaleString()}
+                      {crash.projectName} · {crash.model} ·{" "}
+                      {new Date(crash.createdAt).toLocaleString()}
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-2">

@@ -1,5 +1,10 @@
 import { buildPatterns, redactValue } from "./redact";
-import type { CaptureFailureInput, CaptureFailureResult, PromptCrashConfig, PromptCrashPayload } from "./types";
+import type {
+  CaptureFailureInput,
+  CaptureFailureResult,
+  PromptCrashConfig,
+  PromptCrashPayload
+} from "./types";
 
 export class PromptCrash {
   private readonly config: PromptCrashConfig;
@@ -10,11 +15,14 @@ export class PromptCrash {
 
   async captureFailure(input: CaptureFailureInput): Promise<CaptureFailureResult> {
     const patterns = buildPatterns(this.config.redactionPatterns);
-    const payload: PromptCrashPayload = redactValue({
-      ...input,
-      projectName: this.config.projectName,
-      environment: this.config.environment
-    }, patterns);
+    const payload: PromptCrashPayload = redactValue(
+      {
+        ...input,
+        projectName: this.config.projectName,
+        environment: this.config.environment
+      },
+      patterns
+    );
 
     const fetcher = this.config.fetch ?? fetch;
     let response: Response;

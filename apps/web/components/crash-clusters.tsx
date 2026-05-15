@@ -22,7 +22,9 @@ export function CrashClusters({ clusters }: { clusters: CrashCluster[] }) {
       </CardHeader>
       <CardContent>
         {clusters.length === 0 ? (
-          <p className="text-sm text-muted-foreground">Clusters appear after crashes are captured or seeded.</p>
+          <p className="text-sm text-muted-foreground">
+            Clusters appear after crashes are captured or seeded.
+          </p>
         ) : (
           <div className="divide-y">
             {clusters.map((cluster) => (

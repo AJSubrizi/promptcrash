@@ -6,11 +6,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate --schema prisma/schema.prisma && next build",
-    "lint": "prisma generate --schema prisma/schema.prisma && tsc --noEmit",
+    "lint": "eslint . --max-warnings=0",
     "typecheck": "prisma generate --schema prisma/schema.prisma && tsc --noEmit",
     "test": "vitest run",
     "db:generate": "prisma generate --schema prisma/schema.prisma",
-    "db:push": "prisma db execute --file prisma/init.sql --schema prisma/schema.prisma && prisma generate --schema prisma/schema.prisma",
+    "db:init": "prisma db execute --file prisma/init.sql --schema prisma/schema.prisma && prisma generate --schema prisma/schema.prisma",
     "db:seed": "tsx scripts/seed.ts"
   },
   "dependencies": {

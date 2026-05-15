@@ -45,7 +45,8 @@ export function CrashDetail({
             <div>
               <CardTitle>{crash.route}</CardTitle>
               <CardDescription>
-                {crash.projectName} · {crash.provider}/{crash.model} · {new Date(crash.createdAt).toLocaleString()}
+                {crash.projectName} · {crash.provider}/{crash.model} ·{" "}
+                {new Date(crash.createdAt).toLocaleString()}
               </CardDescription>
             </div>
             <div className="flex flex-wrap gap-2">

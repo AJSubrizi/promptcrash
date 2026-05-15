@@ -11,7 +11,9 @@ function stringify(value: unknown): string {
   return JSON.stringify(value ?? null, null, 2);
 }
 
-export function generateDeterministicVitest(crash: CrashPayload & { id?: string }): TestGenerationResult {
+export function generateDeterministicVitest(
+  crash: CrashPayload & { id?: string }
+): TestGenerationResult {
   const name = `${crash.route} ${crash.failureType} regression`.replace(/`/g, "'");
 
   return {
@@ -48,14 +50,16 @@ async function runPromptCrashReplay(crash: typeof replay): Promise<unknown> {
   };
 }
 
-export async function generateVitest(crash: CrashPayload & { id?: string }): Promise<TestGenerationResult> {
+export async function generateVitest(
+  crash: CrashPayload & { id?: string }
+): Promise<TestGenerationResult> {
   if (!process.env.XAI_API_KEY) {
     return generateDeterministicVitest(crash);
   }
 
   try {
     const result = await generateText({
-      model: xai(process.env.PROMPTCRASH_XAI_MODEL ?? "grok-3"),
+      model: xai(process.env.PROMPTCRASH_XAI_MODEL ?? "grok-4.3"),
       prompt: [
         "Generate a concise Vitest regression test for this captured failed LLM interaction.",
         "The test should be deterministic, self-contained, and should not call a real LLM provider.",

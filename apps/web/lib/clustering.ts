@@ -14,16 +14,14 @@ export function buildCrashClusters(crashes: ClusterableCrash[]): CrashCluster[] 
   for (const crash of crashes) {
     const promptVersion = crash.promptVersion ?? "unversioned";
     const key = `${crash.failureType}:${crash.route}:${promptVersion}`;
-    const existing =
-      clusters.get(key) ??
-      {
-        key,
-        failureType: crash.failureType,
-        route: crash.route,
-        promptVersion,
-        count: 0,
-        severity: { low: 0, medium: 0, high: 0, critical: 0 }
-      };
+    const existing = clusters.get(key) ?? {
+      key,
+      failureType: crash.failureType,
+      route: crash.route,
+      promptVersion,
+      count: 0,
+      severity: { low: 0, medium: 0, high: 0, critical: 0 }
+    };
 
     existing.count += 1;
     if (isSeverity(crash.severity)) {

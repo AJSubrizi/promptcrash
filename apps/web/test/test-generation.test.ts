@@ -20,7 +20,7 @@ describe("deterministic test generation", () => {
     const result = generateDeterministicVitest(crash);
 
     expect(result.source).toBe("fallback");
-    expect(result.code).toContain("import { describe, expect, it } from \"vitest\";");
+    expect(result.code).toContain('import { describe, expect, it } from "vitest";');
     expect(result.code).toContain("runPromptCrashReplay");
     expect(result.code).toContain("does not repeat the captured bad output");
     expect(result.code).toContain("refund-agent");

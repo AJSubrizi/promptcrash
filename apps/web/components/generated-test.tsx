@@ -9,7 +9,9 @@ export function GeneratedTest({ code, source }: { code: string; source: "fallbac
         <div className="flex items-center justify-between gap-3">
           <div>
             <CardTitle>Generated Vitest regression</CardTitle>
-            <CardDescription>Deterministic by default, optionally enhanced by Grok.</CardDescription>
+            <CardDescription>
+              Deterministic by default, optionally enhanced by Grok.
+            </CardDescription>
           </div>
           <Badge>{source}</Badge>
         </div>

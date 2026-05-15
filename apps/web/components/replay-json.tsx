@@ -6,7 +6,9 @@ export function ReplayJson({ replay }: { replay: unknown }) {
     <Card>
       <CardHeader>
         <CardTitle>Replay JSON</CardTitle>
-        <CardDescription>Portable payload for reproducing the failure in a local harness.</CardDescription>
+        <CardDescription>
+          Portable payload for reproducing the failure in a local harness.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <CodeBlock value={replay} />

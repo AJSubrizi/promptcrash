@@ -27,7 +27,9 @@ const builtInPatterns: RedactionPattern[] = [
   }
 ];
 
-export function buildPatterns(custom: Array<{ name: string; pattern: RegExp | string }> = []): RedactionPattern[] {
+export function buildPatterns(
+  custom: Array<{ name: string; pattern: RegExp | string }> = []
+): RedactionPattern[] {
   return [
     ...builtInPatterns,
     ...custom.map((entry) => ({
@@ -39,7 +41,10 @@ export function buildPatterns(custom: Array<{ name: string; pattern: RegExp | st
 }
 
 export function redactString(value: string, patterns = builtInPatterns): string {
-  return patterns.reduce((current, pattern) => current.replace(pattern.pattern, pattern.replacement), value);
+  return patterns.reduce(
+    (current, pattern) => current.replace(pattern.pattern, pattern.replacement),
+    value
+  );
 }
 
 export function redactValue<T>(value: T, patterns = builtInPatterns): T {

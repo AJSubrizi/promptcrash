@@ -55,8 +55,8 @@ export default async function HomePage() {
           Turn bad LLM outputs into reproducible bugs.
         </h1>
         <p className="max-w-2xl text-lg text-muted-foreground">
-          Capture failed interactions, redact secrets before storage, classify failure modes, export replay JSON,
-          and generate regression tests without requiring an LLM call.
+          Capture failed interactions, redact secrets before storage, classify failure modes, export
+          replay JSON, and generate regression tests without requiring an LLM call.
         </p>
       </section>
 

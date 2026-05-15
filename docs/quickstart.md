@@ -5,7 +5,7 @@ PromptCrash captures failed LLM interactions, stores redacted traces locally, an
 ```bash
 pnpm install
 cp apps/web/.env.example apps/web/.env
-pnpm db:push
+pnpm db:init
 pnpm dev
 ```
 
@@ -36,3 +36,27 @@ curl -X POST http://localhost:3000/api/events \
 Open the dashboard and click the captured crash.
 
 You can provide `failureType` and `severity`, or omit them and let PromptCrash use its deterministic fallback classifier.
+
+## SDK status
+
+The SDK package is not published yet. Until the first npm release, use the workspace example app or link the package locally.
+
+```bash
+pnpm --filter @promptcrash/sdk build
+cd packages/sdk
+pnpm link --global
+cd /path/to/your-app
+pnpm link --global @promptcrash/sdk
+```
+
+Then import it from your app:
+
+```ts
+import { PromptCrash } from "@promptcrash/sdk";
+
+const pc = new PromptCrash({
+  endpoint: "http://localhost:3000/api/events",
+  projectName: "support-agent",
+  environment: "development"
+});
+```

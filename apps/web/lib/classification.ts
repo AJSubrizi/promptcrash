@@ -1,7 +1,13 @@
 import { generateObject } from "ai";
 import { xai } from "@ai-sdk/xai";
 import { z } from "zod";
-import { failureTypeSchema, severitySchema, type CrashPayload, type FailureType, type Severity } from "./schemas";
+import {
+  failureTypeSchema,
+  severitySchema,
+  type CrashPayload,
+  type FailureType,
+  type Severity
+} from "./schemas";
 
 export type ClassificationResult = {
   failureType: FailureType;
@@ -39,7 +45,8 @@ export function deterministicClassify(input: Partial<CrashPayload>): Classificat
   else if (text.match(/provider|api error|5\d\d|unavailable/)) failureType = "provider_error";
 
   let severity: Severity = input.severity ?? "medium";
-  if (text.match(/critical|data leak|production outage|charged|deleted|security/)) severity = "critical";
+  if (text.match(/critical|data leak|production outage|charged|deleted|security/))
+    severity = "critical";
   else if (text.match(/high|refund|unsafe|schema|customer impact/)) severity = "high";
   else if (text.match(/low|minor|cosmetic/)) severity = "low";
 
@@ -53,7 +60,7 @@ export async function classifyCrash(input: Partial<CrashPayload>): Promise<Class
 
   try {
     const result = await generateObject({
-      model: xai(process.env.PROMPTCRASH_XAI_MODEL ?? "grok-3"),
+      model: xai(process.env.PROMPTCRASH_XAI_MODEL ?? "grok-4.3"),
       schema: classificationSchema,
       prompt: [
         "Classify this failed LLM interaction for a crash-reporting tool.",

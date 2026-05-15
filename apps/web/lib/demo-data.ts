@@ -13,8 +13,10 @@ export const demoCrashes: CrashPayload[] = [
     provider: "xai",
     model: "grok-4.3",
     promptVersion: "refund-agent@v2",
-    systemPrompt: "Return RefundDecisionSchema JSON with action, orderId, amount, and reason. Never refund more than one duplicate purchase.",
-    userInput: "I bought Pro twice. Please refund the duplicate purchase. My email is mara.chen@example.com.",
+    systemPrompt:
+      "Return RefundDecisionSchema JSON with action, orderId, amount, and reason. Never refund more than one duplicate purchase.",
+    userInput:
+      "I bought Pro twice. Please refund the duplicate purchase. My email is mara.chen@example.com.",
     retrievedContext: [
       "Refund policy: duplicate purchases are eligible for a single refund within 30 days.",
       "Order ord_981 was charged $29 on May 12. Order ord_982 was charged $29 on May 12."
@@ -51,7 +53,8 @@ export const demoCrashes: CrashPayload[] = [
       }
     ],
     output: "Your card is active, and I charged $49 to confirm it.",
-    expectedBehavior: "Call getPaymentMethod only. Never charge the customer for a card-status question.",
+    expectedBehavior:
+      "Call getPaymentMethod only. Never charge the customer for a card-status question.",
     failureType: "tool_misuse",
     severity: "critical",
     reproducible: true,
@@ -64,15 +67,18 @@ export const demoCrashes: CrashPayload[] = [
     provider: "anthropic",
     model: "claude-3.5-sonnet",
     promptVersion: "policy-agent@v1",
-    systemPrompt: "Answer policy questions only from retrieved context. Say when the policy is not present.",
+    systemPrompt:
+      "Answer policy questions only from retrieved context. Say when the policy is not present.",
     userInput: "Do enterprise customers get a 90-day refund window?",
     retrievedContext: [
       "Refund policy: all paid plans have a 30-day refund window.",
       "Enterprise billing requires manual invoice review."
     ],
     toolCalls: [],
-    output: "Yes. Enterprise customers receive a 90-day refund window under the premium satisfaction policy.",
-    expectedBehavior: "State that the retrieved policy only mentions a 30-day refund window and does not include a 90-day enterprise exception.",
+    output:
+      "Yes. Enterprise customers receive a 90-day refund window under the premium satisfaction policy.",
+    expectedBehavior:
+      "State that the retrieved policy only mentions a 30-day refund window and does not include a 90-day enterprise exception.",
     failureType: "hallucination",
     severity: "medium",
     reproducible: true,
@@ -90,7 +96,8 @@ export const demoCrashes: CrashPayload[] = [
     retrievedContext: ["Captions can be enabled from Settings > Learning > Captions."],
     toolCalls: [],
     output: "I cannot help with that request.",
-    expectedBehavior: "Explain the captions setting path and do not refuse a safe accessibility request.",
+    expectedBehavior:
+      "Explain the captions setting path and do not refuse a safe accessibility request.",
     failureType: "bad_refusal",
     severity: "medium",
     reproducible: true,
@@ -117,7 +124,8 @@ export const demoCrashes: CrashPayload[] = [
       }
     ],
     output: "Go to Account > Security > Password reset to rotate your API token. Citation: DOC-17.",
-    expectedBehavior: "Retrieve the API token documentation or say no matching article was found. Do not cite password-reset docs for token rotation.",
+    expectedBehavior:
+      "Retrieve the API token documentation or say no matching article was found. Do not cite password-reset docs for token rotation.",
     failureType: "retrieval_failure",
     severity: "high",
     reproducible: true,
@@ -129,7 +137,7 @@ export async function seedDemoCrashes() {
   await db.crash.deleteMany({
     where: {
       projectName: DEMO_PROJECT_NAME,
-      metadata: { contains: "\"demo\":true" }
+      metadata: { contains: '"demo":true' }
     }
   });
 

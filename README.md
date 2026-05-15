@@ -6,9 +6,13 @@ PromptCrash is a lightweight, local-first crash reporter for LLM applications. I
 
 It is not a chatbot. It is a developer tool for debugging LLM failures.
 
-![PromptCrash dashboard screenshot placeholder](docs/dashboard-placeholder.svg)
+> Screenshot TODO: replace the placeholder dashboard image before the first tagged release.
+>
+> ![PromptCrash dashboard screenshot placeholder](docs/dashboard-placeholder.svg)
 
-![PromptCrash crash detail screenshot placeholder](docs/crash-detail-placeholder.svg)
+> Screenshot TODO: replace the placeholder crash-detail image before the first tagged release.
+>
+> ![PromptCrash crash detail screenshot placeholder](docs/crash-detail-placeholder.svg)
 
 ## The Problem
 
@@ -67,7 +71,7 @@ Each crash can include:
 ```bash
 pnpm install
 cp apps/web/.env.example apps/web/.env
-pnpm db:push
+pnpm db:init
 pnpm dev
 ```
 
@@ -78,7 +82,7 @@ The dashboard starts at `http://localhost:3000`.
 Want to understand PromptCrash before integrating the SDK?
 
 ```bash
-pnpm db:push
+pnpm db:init
 pnpm db:seed
 pnpm dev
 ```
@@ -117,11 +121,19 @@ The dashboard stores a redacted event. If no `XAI_API_KEY` is configured, Prompt
 
 You can provide `failureType` and `severity` yourself, or omit them and let PromptCrash classify the event.
 
-Install the SDK in your app:
+The SDK package is not published yet. Until the first npm release, use the workspace example app or link the package locally.
+
+Local package-link workflow:
 
 ```bash
-pnpm add @promptcrash/sdk
+pnpm --filter @promptcrash/sdk build
+cd packages/sdk
+pnpm link --global
+cd /path/to/your-app
+pnpm link --global @promptcrash/sdk
 ```
+
+Release checklist TODO: publish `@promptcrash/sdk` to npm, then replace this local-link section with `pnpm add @promptcrash/sdk`.
 
 Capture a failed interaction:
 
@@ -141,9 +153,7 @@ await pc.captureFailure({
   promptVersion: "refund-agent@v1",
   systemPrompt: "You are a support refund agent. Return RefundDecisionSchema.",
   userInput: "I bought this twice and want one refunded",
-  retrievedContext: [
-    "Refund policy: duplicate purchases are eligible for refund within 30 days."
-  ],
+  retrievedContext: ["Refund policy: duplicate purchases are eligible for refund within 30 days."],
   toolCalls: [
     {
       name: "getOrderHistory",
@@ -216,7 +226,7 @@ Generated tests are meant to start the regression quickly, not hide your app-spe
 ```bash
 pnpm install
 cp apps/web/.env.example apps/web/.env
-pnpm db:push
+pnpm db:init
 pnpm dev
 ```
 
@@ -226,13 +236,15 @@ Useful commands:
 pnpm lint
 pnpm typecheck
 pnpm test
+pnpm format:check
+pnpm db:init
 pnpm db:seed
 pnpm --filter @promptcrash/web dev
-pnpm --filter @promptcrash/web db:push
+pnpm --filter @promptcrash/web db:init
 pnpm --filter @promptcrash/sdk build
 ```
 
-The repository uses Prisma with SQLite for local persistence. `pnpm db:push` runs the checked-in SQLite initialization SQL and regenerates the Prisma client.
+The repository uses Prisma with SQLite for local persistence. `pnpm db:init` runs the checked-in SQLite initialization SQL and regenerates the Prisma client.
 
 Try the example app:
 
