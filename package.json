@@ -1,0 +1,22 @@
+{
+  "name": "promptcrash",
+  "private": true,
+  "version": "0.1.0",
+  "description": "PromptCrash turns bad LLM outputs into reproducible bugs.",
+  "license": "MIT",
+  "packageManager": "pnpm@9.15.4",
+  "scripts": {
+    "dev": "corepack pnpm --filter @promptcrash/web dev",
+    "build": "corepack pnpm -r --workspace-concurrency=1 build",
+    "lint": "corepack pnpm -r --workspace-concurrency=1 lint",
+    "typecheck": "corepack pnpm -r --workspace-concurrency=1 typecheck",
+    "test": "corepack pnpm -r --workspace-concurrency=1 test",
+    "db:push": "corepack pnpm --filter @promptcrash/web db:push",
+    "db:seed": "corepack pnpm --filter @promptcrash/web db:seed"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.7",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.8"
+  }
+}
