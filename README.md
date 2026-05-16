@@ -3,6 +3,7 @@
 **PromptCrash turns bad LLM outputs into reproducible bugs.**
 
 [![CI](https://github.com/AJSubrizi/promptcrash/actions/workflows/ci.yml/badge.svg)](https://github.com/AJSubrizi/promptcrash/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/@promptcrash/sdk?label=%40promptcrash%2Fsdk)](https://www.npmjs.com/package/@promptcrash/sdk)
 ![License: MIT](https://img.shields.io/badge/license-MIT-111827)
 ![Local-first](https://img.shields.io/badge/local--first-SQLite-0f766e)
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-2563eb)
@@ -18,7 +19,7 @@ It is not a chatbot. It is a developer tool for debugging LLM failures.
 
 ![PromptCrash crash detail](apps/web/public/screenshots/crash-detail.png)
 
-> Demo video TODO: record `capture -> redaction -> replay JSON -> regression scaffold` once `ffmpeg` is available in the release environment.
+![PromptCrash SDK demo](apps/web/public/screenshots/sdk-demo.gif)
 
 ## The Problem
 
