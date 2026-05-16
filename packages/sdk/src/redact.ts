@@ -25,7 +25,7 @@ const builtInPatterns: RedactionPattern[] = [
   {
     name: "secret",
     replacement: "[REDACTED_SECRET]",
-    pattern: /\b(?:sk|pk|xai|anthropic|api|key|token|secret)[_-]?[a-z0-9]*[_-]?[a-z0-9]{16,}\b/gi
+    pattern: /\b(?:(?:sk|pk|xai|anthropic)(?:[-_][a-z0-9]+)+|(?:api|key|token|secret)(?:[-_][a-z0-9]+){2,})\b/gi
   },
   {
     name: "bearer",

@@ -26,6 +26,25 @@ describe("SDK redaction", () => {
     expect(redactString(input)).not.toContain("eyJhbGciOiJIUzI1NiJ9");
   });
 
+  it("redacts real-world short and multi-segment API keys", () => {
+    const input = [
+      "OpenAI key sk-abc123def456",
+      "Anthropic key sk-ant-api03-abc",
+      "xAI key xai-short-key",
+      "Stripe pk_live_abc123",
+      "Custom api_v2_token_abc"
+    ].join("\n");
+
+    const output = redactString(input);
+
+    expect(output).not.toContain("sk-abc123def456");
+    expect(output).not.toContain("sk-ant-api03-abc");
+    expect(output).not.toContain("xai-short-key");
+    expect(output).not.toContain("pk_live_abc123");
+    expect(output).not.toContain("api_v2_token_abc");
+    expect(output).toContain("[REDACTED_SECRET]");
+  });
+
   it("recursively redacts nested values and supports custom patterns", () => {
     const patterns = buildPatterns([{ name: "tenant", pattern: /tenant_[a-z0-9]+/gi }]);
     const output = redactValue(
