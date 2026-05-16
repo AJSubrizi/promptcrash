@@ -33,7 +33,13 @@ export function deterministicClassify(input: Partial<CrashPayload>): Classificat
     .toLowerCase();
 
   let failureType: FailureType = input.failureType ?? "other";
-  if (text.match(/rate.?limit|429|quota/)) failureType = "rate_limit";
+  if (text.match(/context window|context length|context overflow|max tokens|token limit/))
+    failureType = "context_overflow";
+  else if (text.match(/json mode|structured output|invalid json|malformed json/))
+    failureType = "json_mode_error";
+  else if (text.match(/pii leak|leaked pii|exposed email|exposed phone|exposed secret/))
+    failureType = "pii_leakage";
+  else if (text.match(/rate.?limit|429|quota/)) failureType = "rate_limit";
   else if (text.match(/timeout|latency|slow|took \d/)) failureType = "latency";
   else if (text.match(/cost|token spike|expensive/)) failureType = "cost_spike";
   else if (text.match(/schema|json|zod|invalid format|parse/)) failureType = "schema_violation";

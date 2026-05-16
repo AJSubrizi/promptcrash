@@ -5,7 +5,7 @@ export function CodeBlock({ value, className }: { value: unknown; className?: st
   return (
     <pre
       className={cn(
-        "max-h-[420px] overflow-auto rounded-md border bg-slate-950 p-4 text-xs leading-5 text-slate-100",
+        "max-h-[420px] overflow-auto rounded-md border border-slate-800 bg-slate-950/90 p-4 font-mono text-xs leading-5 text-slate-100 shadow-inner",
         className
       )}
     >

@@ -53,3 +53,14 @@ The dashboard renders replay JSON on each crash detail page. You can use it as a
 ```
 
 Replay JSON is not a production log dump. Keep it focused on the minimum context needed to reproduce or explain the failure.
+
+## How to use replay JSON
+
+Replay JSON is most useful when it is checked into your app as a fixture next to a regression scaffold:
+
+```text
+test/fixtures/promptcrash/refund-agent-tool-misuse.json
+test/refund-agent.promptcrash.test.ts
+```
+
+The fixture should contain the redacted trace, not raw production secrets. Your test runner can feed the fixture into a stub, recorded response harness, local model, or application-level LLM wrapper.

@@ -2,17 +2,23 @@
 
 **PromptCrash turns bad LLM outputs into reproducible bugs.**
 
-PromptCrash is a lightweight, local-first crash reporter for LLM applications. It captures failed model interactions and turns them into structured debugging artifacts: redacted traces, replay JSON, failure classifications, and regression-test scaffolds.
+[![CI](https://github.com/AJSubrizi/promptcrash/actions/workflows/ci.yml/badge.svg)](https://github.com/AJSubrizi/promptcrash/actions/workflows/ci.yml)
+![License: MIT](https://img.shields.io/badge/license-MIT-111827)
+![Local-first](https://img.shields.io/badge/local--first-SQLite-0f766e)
+![TypeScript](https://img.shields.io/badge/TypeScript-strict-2563eb)
+
+![Works with Grok](apps/web/public/badges/works-with-grok.svg)
+![Works with xAI](apps/web/public/badges/works-with-xai.svg)
+
+PromptCrash is a lightweight, local-first crash reporter for LLM applications. It captures failed model interactions and turns them into structured debugging artifacts: redacted traces, replay JSON, failure classifications, and regression scaffolds.
 
 It is not a chatbot. It is a developer tool for debugging LLM failures.
 
-> Screenshot TODO: replace the placeholder dashboard image before the first tagged release.
->
-> ![PromptCrash dashboard screenshot placeholder](docs/dashboard-placeholder.svg)
+![PromptCrash dashboard](apps/web/public/screenshots/dashboard.png)
 
-> Screenshot TODO: replace the placeholder crash-detail image before the first tagged release.
->
-> ![PromptCrash crash detail screenshot placeholder](docs/crash-detail-placeholder.svg)
+![PromptCrash crash detail](apps/web/public/screenshots/crash-detail.png)
+
+> Demo video TODO: record `capture -> redaction -> replay JSON -> regression scaffold` once `ffmpeg` is available in the release environment.
 
 ## The Problem
 
@@ -21,6 +27,18 @@ Traditional crash reporters capture stack traces. LLM applications fail differen
 A bad model response may depend on the system prompt, retrieved context, tool calls, schema expectations, provider metadata, latency, token usage, and user feedback. If those details are split across logs, support tickets, provider dashboards, and ad hoc screenshots, the failure is hard to reproduce and almost impossible to turn into a regression test.
 
 PromptCrash treats failed LLM interactions as software bugs.
+
+## Why PromptCrash
+
+LLM bugs are usually reproducibility problems. The model output is only the symptom; the useful debugging artifact is the full interaction that produced it.
+
+PromptCrash gives teams a small, local tool for the moment after an LLM app does something wrong:
+
+```text
+bad output -> redacted crash -> replay JSON -> regression scaffold
+```
+
+That workflow is intentionally narrow. It helps you turn a support incident, failed eval, or manual QA finding into something a developer can inspect, replay, and eventually protect in CI.
 
 ## What It Does
 
@@ -34,6 +52,17 @@ PromptCrash treats failed LLM interactions as software bugs.
 - Optionally uses Grok through `@ai-sdk/xai` when `XAI_API_KEY` is configured.
 
 PromptCrash works without any paid LLM provider key.
+
+## Works with Grok
+
+PromptCrash does not require Grok, but it integrates cleanly with Grok-powered apps.
+
+- Use `provider: "xai"` and `model: "grok-4.3"` in captured crashes.
+- Set `XAI_API_KEY` to allow optional Grok-enhanced classification and test generation.
+- Use `PROMPTCRASH_XAI_MODEL` to override the model; the default is `grok-4.3`.
+- Leave `XAI_API_KEY` unset to use deterministic offline fallbacks.
+
+The repository includes a Grok tool-calling example under `examples/grok-tool-calling`.
 
 ## What PromptCrash Is Not
 
@@ -121,19 +150,11 @@ The dashboard stores a redacted event. If no `XAI_API_KEY` is configured, Prompt
 
 You can provide `failureType` and `severity` yourself, or omit them and let PromptCrash classify the event.
 
-The SDK package is not published yet. Until the first npm release, use the workspace example app or link the package locally.
-
-Local package-link workflow:
+Install the SDK:
 
 ```bash
-pnpm --filter @promptcrash/sdk build
-cd packages/sdk
-pnpm link --global
-cd /path/to/your-app
-pnpm link --global @promptcrash/sdk
+pnpm add @promptcrash/sdk
 ```
-
-Release checklist TODO: publish `@promptcrash/sdk` to npm, then replace this local-link section with `pnpm add @promptcrash/sdk`.
 
 Capture a failed interaction:
 
@@ -192,11 +213,14 @@ PromptCrash uses stable failure buckets:
 - `hallucination`
 - `tool_misuse`
 - `schema_violation`
+- `json_mode_error`
 - `bad_refusal`
 - `unsafe_output`
+- `pii_leakage`
 - `latency`
 - `cost_spike`
 - `retrieval_failure`
+- `context_overflow`
 - `rate_limit`
 - `provider_error`
 - `other`
@@ -205,9 +229,11 @@ Severity is one of `low`, `medium`, `high`, or `critical`.
 
 ## Redaction Philosophy
 
-PromptCrash fails closed. The SDK redacts before sending data, and the API redacts again before validation and persistence.
+PromptCrash redacts before storage. The SDK redacts before sending data, and the API redacts again before validation and persistence.
 
-Built-in redaction covers emails, phone numbers, API keys, token-like secrets, and credit-card-like numbers. Custom SDK regex patterns are supported.
+Built-in redaction covers emails, phone numbers, API keys, authorization headers, token-like secrets, private keys, sensitive object keys, and credit-card-like numbers. Custom SDK regex patterns are supported.
+
+Redaction is best effort. Keep captures local by default, add custom patterns for your domain, and avoid sending unnecessary sensitive context.
 
 ## Replay JSON
 
@@ -254,6 +280,13 @@ pnpm --filter nextjs-support-agent dev
 
 Then open `http://localhost:3001` and report the sample crash.
 
+Try the Grok tool-calling example:
+
+```bash
+pnpm --filter @promptcrash/sdk build
+pnpm dlx tsx examples/grok-tool-calling/capture-grok-tool-failure.ts
+```
+
 ## Docs
 
 - [Quickstart](docs/quickstart.md)
@@ -261,6 +294,7 @@ Then open `http://localhost:3001` and report the sample crash.
 - [Redaction](docs/redaction.md)
 - [Replay files](docs/replay-files.md)
 - [Regression tests](docs/regression-tests.md)
+- [Launch post draft](docs/launch-post.md)
 
 ## Contributing
 

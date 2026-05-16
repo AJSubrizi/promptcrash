@@ -4,13 +4,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 export function ReplayJson({ replay }: { replay: unknown }) {
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="border-b">
         <CardTitle>Replay JSON</CardTitle>
         <CardDescription>
           Portable payload for reproducing the failure in a local harness.
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-4 md:pt-5">
         <CodeBlock value={replay} />
       </CardContent>
     </Card>

@@ -5,6 +5,27 @@
   "description": "PromptCrash turns bad LLM outputs into reproducible bugs.",
   "license": "MIT",
   "packageManager": "pnpm@9.15.4",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AJSubrizi/promptcrash.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AJSubrizi/promptcrash/issues"
+  },
+  "homepage": "https://github.com/AJSubrizi/promptcrash#readme",
+  "keywords": [
+    "llm",
+    "ai",
+    "debugging",
+    "crash-reporting",
+    "grok",
+    "xai",
+    "redaction",
+    "regression-tests"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "corepack pnpm --filter @promptcrash/web dev",
     "build": "corepack pnpm -r --workspace-concurrency=1 build",

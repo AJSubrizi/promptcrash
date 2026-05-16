@@ -32,4 +32,19 @@ describe("crash payload validation", () => {
 
     expect(parsed.success).toBe(false);
   });
+
+  it("accepts expanded AI failure types", () => {
+    for (const failureType of ["json_mode_error", "pii_leakage", "context_overflow"]) {
+      const parsed = crashPayloadSchema.safeParse({
+        projectName: "support-agent",
+        environment: "development",
+        route: "grok-tool-agent",
+        provider: "xai",
+        model: "grok-4.3",
+        failureType
+      });
+
+      expect(parsed.success).toBe(true);
+    }
+  });
 });

@@ -4,6 +4,13 @@ export type RedactionPattern = {
   pattern: RegExp;
 };
 
+export type RedactOptions = {
+  maxDepth?: number;
+};
+
+const sensitiveKeyPattern =
+  /^(?:api[_-]?key|authorization|bearer|cookie|password|private[_-]?key|secret|set-cookie|token)$/i;
+
 const builtInPatterns: RedactionPattern[] = [
   {
     name: "email",
@@ -19,6 +26,31 @@ const builtInPatterns: RedactionPattern[] = [
     name: "secret",
     replacement: "[REDACTED_SECRET]",
     pattern: /\b(?:sk|pk|xai|anthropic|api|key|token|secret)[_-]?[a-z0-9]*[_-]?[a-z0-9]{16,}\b/gi
+  },
+  {
+    name: "bearer",
+    replacement: "[REDACTED_SECRET]",
+    pattern: /\bbearer\s+[a-z0-9._~+/=-]{16,}\b/gi
+  },
+  {
+    name: "jwt",
+    replacement: "[REDACTED_SECRET]",
+    pattern: /\beyJ[a-z0-9_-]+\.[a-z0-9_-]+\.[a-z0-9_-]+\b/gi
+  },
+  {
+    name: "github_token",
+    replacement: "[REDACTED_SECRET]",
+    pattern: /\b(?:ghp|gho|ghu|ghs|ghr)_[a-z0-9_]{20,}\b|github_pat_[a-z0-9_]{20,}/gi
+  },
+  {
+    name: "aws_access_key",
+    replacement: "[REDACTED_SECRET]",
+    pattern: /\b(?:AKIA|ASIA)[A-Z0-9]{16}\b/g
+  },
+  {
+    name: "private_key",
+    replacement: "[REDACTED_SECRET]",
+    pattern: /-----BEGIN [A-Z ]*PRIVATE KEY-----[\s\S]*?-----END [A-Z ]*PRIVATE KEY-----/g
   },
   {
     name: "credit_card",
@@ -47,19 +79,71 @@ export function redactString(value: string, patterns = builtInPatterns): string 
   );
 }
 
-export function redactValue<T>(value: T, patterns = builtInPatterns): T {
+export function redactValue<T>(
+  value: T,
+  patterns = builtInPatterns,
+  options: RedactOptions = {}
+): T {
+  const seen = new WeakSet<object>();
+  return redactValueInternal(value, patterns, options, seen, 0) as T;
+}
+
+function redactValueInternal(
+  value: unknown,
+  patterns: RedactionPattern[],
+  options: RedactOptions,
+  seen: WeakSet<object>,
+  depth: number
+): unknown {
+  const maxDepth = options.maxDepth ?? 25;
+
+  if (depth > maxDepth) {
+    return "[REDACTED_MAX_DEPTH]";
+  }
+
   if (typeof value === "string") {
-    return redactString(value, patterns) as T;
+    return redactString(value, patterns);
   }
 
   if (Array.isArray(value)) {
-    return value.map((item) => redactValue(item, patterns)) as T;
+    return value.map((item) => redactValueInternal(item, patterns, options, seen, depth + 1));
   }
 
   if (value && typeof value === "object") {
+    if (value instanceof Date) {
+      return value;
+    }
+
+    if (seen.has(value)) {
+      return "[REDACTED_CIRCULAR]";
+    }
+    seen.add(value);
+
+    if (value instanceof Map) {
+      return Object.fromEntries(
+        [...value.entries()].map(([key, item]) => [
+          String(key),
+          sensitiveKeyPattern.test(String(key))
+            ? "[REDACTED_SECRET]"
+            : redactValueInternal(item, patterns, options, seen, depth + 1)
+        ])
+      );
+    }
+
+    if (value instanceof Set) {
+      return [...value.values()].map((item) =>
+        redactValueInternal(item, patterns, options, seen, depth + 1)
+      );
+    }
+
     return Object.fromEntries(
-      Object.entries(value).map(([key, item]) => [key, redactValue(item, patterns)])
-    ) as T;
+      Object.entries(value).map(([key, item]) => [
+        key,
+        sensitiveKeyPattern.test(key)
+          ? "[REDACTED_SECRET]"
+          : redactValueInternal(item, patterns, options, seen, depth + 1)
+      ])
+    );
   }
 
   return value;

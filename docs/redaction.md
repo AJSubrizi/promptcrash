@@ -1,6 +1,6 @@
 # Redaction
 
-PromptCrash fails closed: sensitive values are redacted before storage.
+PromptCrash redacts sensitive values before storage. The SDK redacts before sending payloads to the dashboard, and the server redacts again before validation and persistence.
 
 Built-in redactors cover:
 
@@ -8,8 +8,10 @@ Built-in redactors cover:
 - Phone numbers: `[REDACTED_PHONE]`
 - API keys and token-like secrets: `[REDACTED_SECRET]`
 - Credit-card-like numbers: `[REDACTED_CARD]`
+- Sensitive object keys such as `apiKey`, `authorization`, `password`, `secret`, and `token`
+- Common provider token shapes including bearer tokens, GitHub tokens, AWS access keys, JWT-like values, and PEM private keys
 
-The SDK redacts before sending payloads to the dashboard. The server redacts again before validation and persistence. This double-pass approach keeps the stored crash as a redacted trace and protects apps that send raw events directly to `/api/events`.
+This double-pass approach keeps the stored crash as a redacted trace and protects apps that send raw events directly to `/api/events`.
 
 Custom SDK patterns are supported:
 

@@ -49,3 +49,13 @@ async function runPromptCrashReplay(crash: typeof replay): Promise<unknown> {
 ```
 
 The scaffold intentionally avoids calling a paid provider from CI. Your project decides whether replay runs against a stub, recorded response, local model, or application-level wrapper.
+
+## What to edit
+
+Most generated scaffolds need three app-specific edits:
+
+- Replace `runPromptCrashReplay` with your real prompt runner or schema validator.
+- Decide whether CI should use a stub, recorded response, local model, or provider call.
+- Add assertions for the behavior you actually require, especially schema validity and tool-call constraints.
+
+PromptCrash generates the starting point; your application owns the final regression.

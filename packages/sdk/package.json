@@ -2,25 +2,62 @@
   "name": "@promptcrash/sdk",
   "version": "0.1.0",
   "description": "TypeScript SDK for capturing failed LLM interactions with PromptCrash.",
+  "license": "MIT",
   "type": "module",
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
     }
   },
+  "sideEffects": false,
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AJSubrizi/promptcrash.git",
+    "directory": "packages/sdk"
+  },
+  "bugs": {
+    "url": "https://github.com/AJSubrizi/promptcrash/issues"
+  },
+  "homepage": "https://github.com/AJSubrizi/promptcrash/tree/main/packages/sdk#readme",
+  "keywords": [
+    "llm",
+    "ai",
+    "grok",
+    "xai",
+    "crash-reporting",
+    "redaction",
+    "regression-tests",
+    "developer-tools"
+  ],
+  "engines": {
+    "node": ">=20.11"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsup",
     "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "pack:check": "corepack pnpm build && npm pack --dry-run",
+    "prepack": "corepack pnpm build",
+    "publish:beta": "corepack pnpm publish --access public --tag beta"
   },
   "devDependencies": {
+    "tsup": "^8.3.5",
     "typescript": "^5.7.3",
     "vitest": "^2.1.8"
   }

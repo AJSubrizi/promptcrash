@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 export function GeneratedTest({ code, source }: { code: string; source: "fallback" | "xai" }) {
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="border-b">
         <div className="flex items-center justify-between gap-3">
           <div>
             <CardTitle>Generated Vitest regression</CardTitle>
@@ -13,10 +13,10 @@ export function GeneratedTest({ code, source }: { code: string; source: "fallbac
               Deterministic by default, optionally enhanced by Grok.
             </CardDescription>
           </div>
-          <Badge>{source}</Badge>
+          <Badge tone={source === "xai" ? "low" : "default"}>{source}</Badge>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-4 md:pt-5">
         <CodeBlock value={code} />
       </CardContent>
     </Card>

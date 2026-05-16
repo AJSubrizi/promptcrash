@@ -20,4 +20,16 @@ describe("deterministic classification", () => {
     expect(result.failureType).toBe("tool_misuse");
     expect(result.severity).toBe("high");
   });
+
+  it("classifies Grok/xAI-specific failure shapes", () => {
+    expect(deterministicClassify({ output: "JSON mode returned malformed JSON" }).failureType).toBe(
+      "json_mode_error"
+    );
+    expect(
+      deterministicClassify({ output: "Context length exceeded max tokens" }).failureType
+    ).toBe("context_overflow");
+    expect(deterministicClassify({ output: "The answer exposed email PII" }).failureType).toBe(
+      "pii_leakage"
+    );
+  });
 });

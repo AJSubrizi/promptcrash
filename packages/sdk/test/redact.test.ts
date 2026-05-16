@@ -12,6 +12,20 @@ describe("SDK redaction", () => {
     expect(redactString(input)).toContain("[REDACTED_CARD]");
   });
 
+  it("redacts common provider tokens and authorization headers", () => {
+    const input = [
+      "Authorization: Bearer xai_1234567890abcdef1234567890abcdef",
+      "GitHub token ghp_1234567890abcdef1234567890abcdef",
+      "AWS key AKIA1234567890ABCDEF",
+      "JWT eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjMifQ.signature"
+    ].join("\n");
+
+    expect(redactString(input)).not.toContain("xai_1234567890abcdef1234567890abcdef");
+    expect(redactString(input)).not.toContain("ghp_1234567890abcdef1234567890abcdef");
+    expect(redactString(input)).not.toContain("AKIA1234567890ABCDEF");
+    expect(redactString(input)).not.toContain("eyJhbGciOiJIUzI1NiJ9");
+  });
+
   it("recursively redacts nested values and supports custom patterns", () => {
     const patterns = buildPatterns([{ name: "tenant", pattern: /tenant_[a-z0-9]+/gi }]);
     const output = redactValue(
@@ -23,6 +37,66 @@ describe("SDK redaction", () => {
       user: {
         email: "[REDACTED_EMAIL]",
         tenant: "[REDACTED_TENANT]"
+      }
+    });
+  });
+
+  it("redacts values for sensitive object keys", () => {
+    const output = redactValue({
+      password: "correct-horse-battery-staple",
+      apiKey: "plain-key-that-does-not-match-a-token-pattern",
+      nested: {
+        authorization: "Bearer local-dev-token"
+      },
+      visible: "safe diagnostic metadata"
+    });
+
+    expect(output).toEqual({
+      password: "[REDACTED_SECRET]",
+      apiKey: "[REDACTED_SECRET]",
+      nested: {
+        authorization: "[REDACTED_SECRET]"
+      },
+      visible: "safe diagnostic metadata"
+    });
+  });
+
+  it("handles circular objects without throwing", () => {
+    const input: { email: string; self?: unknown } = { email: "person@example.com" };
+    input.self = input;
+
+    expect(redactValue(input)).toEqual({
+      email: "[REDACTED_EMAIL]",
+      self: "[REDACTED_CIRCULAR]"
+    });
+  });
+
+  it("redacts maps and sets", () => {
+    const output = redactValue({
+      headers: new Map([
+        ["authorization", "Bearer local-dev-token"],
+        ["x-user", "admin@example.com"]
+      ]),
+      values: new Set(["tenant_alpha", "owner@example.com"])
+    });
+
+    expect(output).toEqual({
+      headers: {
+        authorization: "[REDACTED_SECRET]",
+        "x-user": "[REDACTED_EMAIL]"
+      },
+      values: ["tenant_alpha", "[REDACTED_EMAIL]"]
+    });
+  });
+
+  it("stops at the configured max depth", () => {
+    const output = redactValue({ level1: { level2: { email: "person@example.com" } } }, undefined, {
+      maxDepth: 1
+    });
+
+    expect(output).toEqual({
+      level1: {
+        level2: "[REDACTED_MAX_DEPTH]"
       }
     });
   });

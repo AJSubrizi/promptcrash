@@ -40,12 +40,13 @@ export function CrashDetail({
   return (
     <div className="space-y-5">
       <Card>
-        <CardHeader>
+        <CardHeader className="border-b">
           <div className="flex flex-wrap items-start justify-between gap-3">
-            <div>
-              <CardTitle>{crash.route}</CardTitle>
-              <CardDescription>
-                {crash.projectName} · {crash.provider}/{crash.model} ·{" "}
+            <div className="min-w-0">
+              <div className="mb-2 font-mono text-xs uppercase text-primary">Incident summary</div>
+              <CardTitle className="break-words text-xl md:text-2xl">{crash.route}</CardTitle>
+              <CardDescription className="mt-2 font-mono">
+                {crash.projectName} / {crash.provider}/{crash.model} /{" "}
                 {new Date(crash.createdAt).toLocaleString()}
               </CardDescription>
             </div>
@@ -56,7 +57,7 @@ export function CrashDetail({
             </div>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-4 md:pt-5">
           <TraceTimeline
             items={[
               { label: "Environment", value: crash.environment },
@@ -68,27 +69,56 @@ export function CrashDetail({
       </Card>
 
       <div className="grid gap-5 lg:grid-cols-2">
-        <Section title="System prompt" value={crash.systemPrompt ?? ""} />
-        <Section title="User input" value={crash.userInput} />
-        <Section title="Retrieved context" value={crash.retrievedContext} />
-        <Section title="Model output" value={crash.output} />
+        <Section
+          title="System prompt"
+          description="Instruction context at failure time."
+          value={crash.systemPrompt ?? ""}
+        />
+        <Section
+          title="User input"
+          description="Captured user payload after redaction."
+          value={crash.userInput}
+        />
+        <Section
+          title="Retrieved context"
+          description="RAG or tool context included in the run."
+          value={crash.retrievedContext}
+        />
+        <Section
+          title="Model output"
+          description="Observed response that violated expectations."
+          value={crash.output}
+        />
       </div>
 
       <ToolCallViewer toolCalls={crash.toolCalls} />
-      <Section title="Metadata" value={crash.metadata} />
+      <Section
+        title="Metadata"
+        description="Additional diagnostic fields attached by the app."
+        value={crash.metadata}
+      />
       <ReplayJson replay={replay} />
       <GeneratedTest code={generatedTest.code} source={generatedTest.source} />
     </div>
   );
 }
 
-function Section({ title, value }: { title: string; value: unknown }) {
+function Section({
+  title,
+  description,
+  value
+}: {
+  title: string;
+  description: string;
+  value: unknown;
+}) {
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="border-b">
         <CardTitle>{title}</CardTitle>
+        <CardDescription>{description}</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-4 md:pt-5">
         <CodeBlock value={value} />
       </CardContent>
     </Card>
